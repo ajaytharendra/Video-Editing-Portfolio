@@ -106,8 +106,26 @@ export default function About() {
           </div>
 
           <p className="text-lg sm:text-xl text-foreground/60 leading-relaxed mb-16 max-w-2xl font-light opacity-0">
-            I'm Ajay Tharendra, a student freelancer passionate about transforming ideas into cinematic visual experiences. I specialize in video editing, motion graphics, promotional films, AI-assisted creative workflows, and brand-focused content that captures attention and tells compelling stories. From concert promotions and cultural events to social media campaigns and title animations, I enjoy blending creativity with precision to create work that feels polished, engaging, and memorable.
+            I'm Ajay Tharendra, a student freelancer with 3+ years of experience, over 500+ videos edited, and 10+ clients served. I am passionate about transforming ideas into cinematic visual experiences, specializing in video editing, motion graphics, promotional films, AI-assisted creative workflows, and brand-focused content that captures attention and tells compelling stories. From concert promotions and cultural events to social media campaigns and title animations, I enjoy blending creativity with precision to create work that feels polished, engaging, and memorable.
           </p>
+
+          <div className="mb-16 opacity-0">
+            <h3 className="text-[10px] uppercase tracking-[0.2em] text-foreground/40 mb-6 font-mono">Experience & Stats</h3>
+            <div className="flex flex-wrap gap-3">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/10 transition-colors">
+                <Briefcase className="w-3.5 h-3.5 text-foreground/70" />
+                <span className="text-xs tracking-wider uppercase text-foreground/80">3+ Years of Experience</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/10 transition-colors">
+                <Video className="w-3.5 h-3.5 text-foreground/70" />
+                <span className="text-xs tracking-wider uppercase text-foreground/80">500+ Videos Edited</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/10 transition-colors">
+                <Sparkles className="w-3.5 h-3.5 text-foreground/70" />
+                <span className="text-xs tracking-wider uppercase text-foreground/80">10+ Happy Clients</span>
+              </div>
+            </div>
+          </div>
 
           <div className="mb-16 opacity-0">
             <h3 className="text-[10px] uppercase tracking-[0.2em] text-foreground/40 mb-6 font-mono">Expertise</h3>
