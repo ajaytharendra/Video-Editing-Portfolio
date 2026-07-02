@@ -105,48 +105,54 @@ export default function About() {
             </div>
           </div>
 
-          <p className="text-lg sm:text-xl text-foreground/60 leading-relaxed mb-16 max-w-2xl font-light opacity-0">
-            I'm Ajay Tharendra, a student freelancer with 3+ years of experience, over 500+ videos edited, and 10+ clients served. I am passionate about transforming ideas into cinematic visual experiences, specializing in video editing, motion graphics, promotional films, AI-assisted creative workflows, and brand-focused content that captures attention and tells compelling stories. From concert promotions and cultural events to social media campaigns and title animations, I enjoy blending creativity with precision to create work that feels polished, engaging, and memorable.
+          <p className="text-lg sm:text-xl text-foreground/60 leading-relaxed mb-12 max-w-2xl font-light opacity-0">
+            I'm Ajay Tharendra, a student freelancer with 3+ years of experience, over 500+ videos edited, and 10+ clients served. I am passionate about transforming ideas into cinematic visual experiences. I specialize in video editing, motion graphics, promotional films, AI-assisted creative workflows, and brand-focused content that captures attention and tells compelling stories. From concert promotions and cultural events to social media campaigns and title animations, I enjoy blending creativity with precision to create work that feels polished, engaging, and memorable.
           </p>
 
-          <div className="mb-16 opacity-0">
-            <h3 className="text-[10px] uppercase tracking-[0.2em] text-foreground/40 mb-6 font-mono">Experience & Stats</h3>
-            <div className="flex flex-wrap gap-3">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/10 transition-colors">
-                <Briefcase className="w-3.5 h-3.5 text-foreground/70" />
-                <span className="text-xs tracking-wider uppercase text-foreground/80">3+ Years of Experience</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/10 transition-colors">
-                <Video className="w-3.5 h-3.5 text-foreground/70" />
-                <span className="text-xs tracking-wider uppercase text-foreground/80">500+ Videos Edited</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/10 transition-colors">
-                <Sparkles className="w-3.5 h-3.5 text-foreground/70" />
-                <span className="text-xs tracking-wider uppercase text-foreground/80">10+ Happy Clients</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-16 opacity-0">
-            <h3 className="text-[10px] uppercase tracking-[0.2em] text-foreground/40 mb-6 font-mono">Expertise</h3>
-            <div className="flex flex-wrap gap-3">
-              {skills.map((skill, idx) => (
-                <div key={idx} className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/10 transition-colors">
-                  <skill.icon className="w-3.5 h-3.5 text-foreground/70" />
-                  <span className="text-xs tracking-wider uppercase text-foreground/80">{skill.label}</span>
+          {/* Grid Container for stats, expertise, and software */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 pt-6 border-t border-white/5 opacity-0">
+            {/* Box 1: Experience & Stats */}
+            <div>
+              <h3 className="text-[10px] uppercase tracking-[0.2em] text-foreground/40 mb-5 font-mono">Experience</h3>
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-2 text-xs tracking-wider uppercase text-foreground/80">
+                  <Briefcase className="w-3.5 h-3.5 text-foreground/50 shrink-0" />
+                  <span>3+ Years Exp</span>
                 </div>
-              ))}
+                <div className="flex items-center gap-2 text-xs tracking-wider uppercase text-foreground/80">
+                  <Video className="w-3.5 h-3.5 text-foreground/50 shrink-0" />
+                  <span>500+ Edits</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs tracking-wider uppercase text-foreground/80">
+                  <Sparkles className="w-3.5 h-3.5 text-foreground/50 shrink-0" />
+                  <span>10+ Clients</span>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div className="opacity-0">
-            <h3 className="text-[10px] uppercase tracking-[0.2em] text-foreground/40 mb-6 font-mono">Software Stack</h3>
-            <div className="flex flex-wrap gap-2">
-              {software.map((item, idx) => (
-                <span key={idx} className="px-4 py-2 text-xs tracking-wider uppercase text-foreground/60 bg-transparent border border-white/5 rounded-full hover:text-foreground transition-colors">
-                  {item}
-                </span>
-              ))}
+            {/* Box 2: Expertise */}
+            <div>
+              <h3 className="text-[10px] uppercase tracking-[0.2em] text-foreground/40 mb-5 font-mono">Expertise</h3>
+              <div className="flex flex-col gap-3">
+                {skills.slice(0, 4).map((skill, idx) => (
+                  <div key={idx} className="flex items-center gap-2 text-xs tracking-wider uppercase text-foreground/80">
+                    <skill.icon className="w-3.5 h-3.5 text-foreground/50 shrink-0" />
+                    <span>{skill.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Box 3: Software Stack */}
+            <div>
+              <h3 className="text-[10px] uppercase tracking-[0.2em] text-foreground/40 mb-5 font-mono">Software</h3>
+              <div className="flex flex-wrap gap-2">
+                {software.map((item, idx) => (
+                  <span key={idx} className="px-3 py-1.5 text-[10px] tracking-wider uppercase text-foreground/70 bg-white/[0.02] border border-white/5 rounded-sm hover:border-white/20 hover:text-foreground transition-colors">
+                    {item}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
 
