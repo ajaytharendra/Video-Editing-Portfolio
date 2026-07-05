@@ -322,6 +322,10 @@ export default function VideoFullscreenModal({
             <X className="w-6 h-6" aria-hidden="true" />
           </button>
 
+          {isLoading && (
+            <VideoLoader className="absolute z-50" />
+          )}
+
           <motion.div
             initial={{ scale: 0.95, opacity: 0, filter: 'blur(6px)' }}
             animate={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
@@ -353,10 +357,6 @@ export default function VideoFullscreenModal({
               aria-label={title}
               style={rotateStyle}
             />
-
-            {isLoading && (
-              <VideoLoader className="absolute inset-0 bg-black/60 z-30" />
-            )}
 
             {!isPlaying && !isLoading && (
               <div 
