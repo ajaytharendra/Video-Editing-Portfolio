@@ -10,7 +10,6 @@ export type AnimationItem = {
   objectFit?: 'cover' | 'contain';
   rotate?: 'left' | 'right' | 'none';
   noAudio?: boolean;
-  youtubeId?: string;
 };
 
 export const twoDAnimations: AnimationItem[] = [
@@ -20,7 +19,7 @@ export const twoDAnimations: AnimationItem[] = [
 ];
 
 export const titleAnimations: AnimationItem[] = [
-  { id: 18, title: 'Movie title recreation', category: 'Title Animation', type: '16:9', src: "/videos/Title.mp4", youtubeId: "KUAKmtdp5nY" },
+  { id: 18, title: 'Movie title recreation', category: 'Title Animation', type: '16:9', src: "/videos/Title.mp4" },
   { id: 19, title: 'Motion Titles', category: 'Title Animation', type: '16:9', src: "/videos/Halloween.mp4", startTime: -20, endTime: -0.1 },
   { id: 30, title: 'Recreations', category: 'Title Animation', type: '16:9', src: "/videos/Diw.mp4" },
 ];
@@ -29,5 +28,5 @@ export const Motionposter: AnimationItem[] = [
   { id: 4, title: 'Trophy Event', category: 'Motion Poster', type: '9:16', src: "/videos/CCL.mp4" },
   { id: 5, title: 'After Video', category: 'Motion Poster', type: '9:16', src:"/videos/Motion.mp4"},
   { id: 6, title: 'Event Promo Poster', category: 'Motion Poster', type: '16:9', src: "/videos/Comp 1.mp4" },
-  { id: 20, title: 'Cinematic Posters', category: 'Motion Poster', type: '16:9', src: "/videos/Suriya.mp4", noAudio: true, youtubeId: "mSbmuFNlwOY" },
+  { id: 20, title: 'Cinematic Posters', category: 'Motion Poster', type: '16:9', src: "/videos/Suriya.mp4", noAudio: true },
 ];

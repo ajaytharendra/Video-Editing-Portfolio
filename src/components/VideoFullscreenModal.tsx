@@ -31,9 +31,7 @@ function fitVideoWidth(naturalWidth: number, naturalHeight: number): number {
 interface VideoFullscreenModalProps {
   isOpen: boolean;
   onClose: () => void;
-  src?: string;
-  youtubeId?: string;
-  type?: '9:16' | '16:9' | '1:1';
+  src: string;
   title: string;
   poster?: string;
   startTime?: number;
@@ -49,8 +47,6 @@ export default function VideoFullscreenModal({
   isOpen,
   onClose,
   src,
-  youtubeId,
-  type,
   title,
   poster,
   startTime = 0,
@@ -74,37 +70,19 @@ export default function VideoFullscreenModal({
   }, [onClose]);
 
   const syncDisplayWidth = useCallback(() => {
-    if (youtubeId) {
-      const isPortrait = type === '9:16';
-      const isSquare = type === '1:1';
-      const w = isPortrait ? 1080 : isSquare ? 1080 : 1920;
-      const h = isPortrait ? 1920 : isSquare ? 1080 : 1080;
-      setDisplayWidth(fitVideoWidth(w, h));
-      return;
-    }
     const video = videoRef.current;
     if (!video || video.videoWidth === 0 || video.videoHeight === 0) return;
     const isRotated = rotate === 'left' || rotate === 'right';
     const w = isRotated ? video.videoHeight : video.videoWidth;
     const h = isRotated ? video.videoWidth : video.videoHeight;
     setDisplayWidth(fitVideoWidth(w, h));
-  }, [rotate, youtubeId, type]);
+  }, [rotate]);
 
   useEffect(() => {
     if (!isOpen) {
       setDisplayWidth(null);
     }
   }, [isOpen]);
-
-  useEffect(() => {
-    if (isOpen && youtubeId) {
-      syncDisplayWidth();
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-      }, 600);
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen, youtubeId, syncDisplayWidth]);
 
   useEffect(() => {
     if (!isOpen) return;

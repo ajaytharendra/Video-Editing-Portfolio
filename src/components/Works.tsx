@@ -32,7 +32,6 @@ function HorizontalRow({ items }: { items: typeof worksData[Category] }) {
               category={work.category}
               type={work.type}
               src={work.src}
-              youtubeId={work.youtubeId}
               thumbnail={work.thumbnail}
               startTime={work.startTime}
               endTime={work.endTime}

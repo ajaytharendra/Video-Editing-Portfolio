@@ -84,7 +84,6 @@ export default function VFXSection() {
                   category={item.category}
                   type={item.type}
                   src={item.src}
-                  youtubeId={item.youtubeId}
                   thumbnail={item.thumbnail}
                   startTime={item.startTime}
                   endTime={item.endTime}

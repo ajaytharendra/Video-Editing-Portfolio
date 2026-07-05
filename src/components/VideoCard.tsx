@@ -15,10 +15,9 @@ interface VideoCardProps {
   objectFit?: 'cover' | 'contain';
   rotate?: 'left' | 'right' | 'none';
   noAudio?: boolean;
-  youtubeId?: string;
 }
 
-export default function VideoCard({ title, category, type, src, youtubeId, thumbnail, previewStart, startTime, endTime, objectFit = 'cover', rotate = 'none', noAudio = false }: VideoCardProps) {
+export default function VideoCard({ title, category, type, src, thumbnail, previewStart, startTime, endTime, objectFit = 'cover', rotate = 'none', noAudio = false }: VideoCardProps) {
   const isPortrait = type === '9:16';
   const isSquare = type === '1:1';
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -45,7 +44,6 @@ export default function VideoCard({ title, category, type, src, youtubeId, thumb
   const [actualStartTime, setActualStartTime] = useState(0);
   const [actualEndTime, setActualEndTime] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const cardThumbnail = thumbnail || (youtubeId ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg` : undefined);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -216,7 +214,7 @@ export default function VideoCard({ title, category, type, src, youtubeId, thumb
           <video
             ref={videoRef}
             src={src ? `${src}#t=${actualStartTime}` : undefined}
-            poster={cardThumbnail || undefined}
+            poster={thumbnail || undefined}
             muted={true}
             loop={true}
             playsInline={true}
@@ -228,9 +226,9 @@ export default function VideoCard({ title, category, type, src, youtubeId, thumb
           <div className="absolute inset-0 bg-gradient-to-br from-card to-muted z-0" />
         )}
 
-        {cardThumbnail && (
+        {thumbnail && (
           <img
-            src={cardThumbnail}
+            src={thumbnail}
             alt={title}
             loading="lazy"
             className={`absolute inset-0 w-full h-full object-cover z-[1] transition-opacity duration-700 ${playing ? 'opacity-0' : 'opacity-100'}`}
@@ -276,14 +274,13 @@ export default function VideoCard({ title, category, type, src, youtubeId, thumb
         </div>
       </div>
 
-      {(src || youtubeId) && (
+      {src && (
         <VideoFullscreenModal
           isOpen={isFullscreen}
           onClose={handleCloseFullscreen}
           src={src}
-          youtubeId={youtubeId}
           title={title}
-          poster={cardThumbnail}
+          poster={thumbnail}
           startTime={fullscreenStartTime}
           muted={noAudio ? true : muted}
           onMutedChange={noAudio ? () => {} : setMuted}
