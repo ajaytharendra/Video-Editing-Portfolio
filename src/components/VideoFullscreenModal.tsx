@@ -364,39 +364,23 @@ export default function VideoFullscreenModal({
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            {youtubeId ? (
-              <iframe
-                src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&controls=1&rel=0&modestbranding=1&playsinline=1`}
-                title={title}
-                className="block w-full bg-black shadow-2xl border-0"
-                allow="autoplay; encrypted-media; picture-in-picture"
-                allowFullScreen
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  aspectRatio: type === '9:16' ? '9/16' : '16/9',
-                  ...rotateStyle
-                }}
-              />
-            ) : (
-              <video
-                ref={videoRef}
-                src={src}
-                poster={poster}
-                playsInline={true}
-                muted={muted}
-                loop
-                tabIndex={0}
-                onClick={togglePlay}
-                onLoadedMetadata={handleLoadedMetadata}
-                onLoadedData={handleLoadedMetadata}
-                className="block w-full h-auto bg-black shadow-2xl outline-none focus-visible:ring-2 focus-visible:ring-primary/60 cursor-pointer"
-                aria-label={title}
-                style={rotateStyle}
-              />
-            )}
+            <video
+              ref={videoRef}
+              src={src}
+              poster={poster}
+              playsInline={true}
+              muted={muted}
+              loop
+              tabIndex={0}
+              onClick={togglePlay}
+              onLoadedMetadata={handleLoadedMetadata}
+              onLoadedData={handleLoadedMetadata}
+              className="block w-full h-auto bg-black shadow-2xl outline-none focus-visible:ring-2 focus-visible:ring-primary/60 cursor-pointer"
+              aria-label={title}
+              style={rotateStyle}
+            />
 
-            {!youtubeId && !isPlaying && !isLoading && (
+            {!isPlaying && !isLoading && (
               <div 
                 className="absolute inset-0 flex items-center justify-center bg-black/35 pointer-events-none z-10"
               >
@@ -408,7 +392,7 @@ export default function VideoFullscreenModal({
               </div>
             )}
 
-            {displayWidth && !youtubeId && !noAudio && (
+            {displayWidth && !noAudio && (
               <button
                 type="button"
                 onClick={toggleMute}
