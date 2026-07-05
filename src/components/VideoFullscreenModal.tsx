@@ -321,7 +321,8 @@ export default function VideoFullscreenModal({
               ref={videoRef}
               src={src}
               poster={poster}
-              playsInline
+              playsInline={true}
+              muted={muted}
               loop
               tabIndex={0}
               onClick={togglePlay}

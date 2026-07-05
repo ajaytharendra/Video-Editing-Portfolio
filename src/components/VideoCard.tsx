@@ -182,9 +182,9 @@ export default function VideoCard({ title, category, type, src, thumbnail, previ
             ref={videoRef}
             src={src ? `${src}#t=${actualStartTime}` : undefined}
             poster={thumbnail || undefined}
-            muted
-            loop
-            playsInline
+            muted={true}
+            loop={true}
+            playsInline={true}
             preload="metadata"
             className={`absolute inset-0 w-full h-full z-0 ${objectFit === 'contain' ? 'object-contain bg-black/90' : 'object-cover'}`}
             style={rotateStyle}
