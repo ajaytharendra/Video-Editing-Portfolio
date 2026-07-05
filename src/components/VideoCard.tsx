@@ -42,56 +42,6 @@ export default function VideoCard({ title, category, type, src, thumbnail, previ
   const [fullscreenStartTime, setFullscreenStartTime] = useState(0);
   const [actualStartTime, setActualStartTime] = useState(0);
   const [actualEndTime, setActualEndTime] = useState<number | null>(null);
-  const [generatedThumbnail, setGeneratedThumbnail] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!src || thumbnail) return;
-
-    let active = true;
-    const video = document.createElement('video');
-    video.crossOrigin = 'anonymous';
-    video.src = src;
-    video.muted = true;
-    video.playsInline = true;
-    
-    const startVal = startTime !== undefined 
-      ? (startTime < 0 ? 0 : startTime) 
-      : (previewStart ?? 0.0);
-    video.currentTime = startVal;
-
-    const handleSeeked = () => {
-      if (!active) return;
-      try {
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth || 320;
-        canvas.height = video.videoHeight || 180;
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-          setGeneratedThumbnail(dataUrl);
-        }
-      } catch (err) {
-        console.error('Failed to generate thumbnail for ' + title, err);
-      }
-      cleanup();
-    };
-
-    const cleanup = () => {
-      video.removeEventListener('seeked', handleSeeked);
-      video.removeEventListener('error', cleanup);
-    };
-
-    video.addEventListener('seeked', handleSeeked);
-    video.addEventListener('error', cleanup);
-
-    video.load();
-
-    return () => {
-      active = false;
-      cleanup();
-    };
-  }, [src, thumbnail, startTime, previewStart, title]);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -231,11 +181,11 @@ export default function VideoCard({ title, category, type, src, thumbnail, previ
           <video
             ref={videoRef}
             src={src ? `${src}#t=${actualStartTime}` : undefined}
-            poster={thumbnail || generatedThumbnail || undefined}
+            poster={thumbnail || undefined}
             muted
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
             className={`absolute inset-0 w-full h-full z-0 ${objectFit === 'contain' ? 'object-contain bg-black/90' : 'object-cover'}`}
             style={rotateStyle}
           />
@@ -243,9 +193,9 @@ export default function VideoCard({ title, category, type, src, thumbnail, previ
           <div className="absolute inset-0 bg-gradient-to-br from-card to-muted z-0" />
         )}
 
-        {(thumbnail || generatedThumbnail) && (
+        {thumbnail && (
           <img
-            src={thumbnail || generatedThumbnail || ''}
+            src={thumbnail}
             alt={title}
             loading="lazy"
             className={`absolute inset-0 w-full h-full object-cover z-[1] transition-opacity duration-700 ${playing ? 'opacity-0' : 'opacity-100'}`}
