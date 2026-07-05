@@ -12,9 +12,10 @@ export type VFXItem = {
   objectFit?: 'cover' | 'contain';
   rotate?: 'left' | 'right' | 'none';
   noAudio?: boolean;
+  youtubeId?: string;
 };
 
 export const vfxData: VFXItem[] = [
-  { id: 1, title: 'World Built with VFX', category: 'VFX', type: '16:9', src: "/videos/VFX.mp4" },
+  { id: 1, title: 'World Built with VFX', category: 'VFX', type: '16:9', src: "/videos/VFX.mp4", youtubeId: "ixn-6aDDiZU" },
   { id: 27, title: 'Cinematic VFX', category: 'VFX', type: '16:9', src: "/videos/Halloween.mp4" },
 ];

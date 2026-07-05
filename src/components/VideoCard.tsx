@@ -15,9 +15,10 @@ interface VideoCardProps {
   objectFit?: 'cover' | 'contain';
   rotate?: 'left' | 'right' | 'none';
   noAudio?: boolean;
+  youtubeId?: string;
 }
 
-export default function VideoCard({ title, category, type, src, thumbnail, previewStart, startTime, endTime, objectFit = 'cover', rotate = 'none', noAudio = false }: VideoCardProps) {
+export default function VideoCard({ title, category, type, src, youtubeId, thumbnail, previewStart, startTime, endTime, objectFit = 'cover', rotate = 'none', noAudio = false }: VideoCardProps) {
   const isPortrait = type === '9:16';
   const isSquare = type === '1:1';
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -44,6 +45,7 @@ export default function VideoCard({ title, category, type, src, thumbnail, previ
   const [actualStartTime, setActualStartTime] = useState(0);
   const [actualEndTime, setActualEndTime] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const cardThumbnail = thumbnail || (youtubeId ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg` : undefined);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -155,6 +157,10 @@ export default function VideoCard({ title, category, type, src, thumbnail, previ
   }, [src, startTime, endTime, previewStart]);
 
   const handleMouseEnter = () => {
+    if (youtubeId && !isFullscreen) {
+      setPlaying(true);
+      return;
+    }
     if (src && videoRef.current && !isFullscreen) {
       videoRef.current.currentTime = actualStartTime;
       videoRef.current.play().catch(() => {});
@@ -163,6 +169,10 @@ export default function VideoCard({ title, category, type, src, thumbnail, previ
   };
 
   const handleMouseLeave = () => {
+    if (youtubeId && !isFullscreen) {
+      setPlaying(false);
+      return;
+    }
     if (src && videoRef.current && !isFullscreen) {
       videoRef.current.pause();
       videoRef.current.currentTime = actualStartTime;
@@ -177,6 +187,11 @@ export default function VideoCard({ title, category, type, src, thumbnail, previ
   };
 
   const handleCardClick = () => {
+    if (youtubeId) {
+      setPlaying(false);
+      setIsFullscreen(true);
+      return;
+    }
     if (src && videoRef.current) {
       setFullscreenStartTime(videoRef.current.currentTime);
       videoRef.current.pause();
@@ -210,11 +225,22 @@ export default function VideoCard({ title, category, type, src, thumbnail, previ
         onMouseLeave={handleMouseLeave}
         onClick={handleCardClick}
       >
-        {src ? (
+        {youtubeId ? (
+          playing && (
+            <iframe
+              src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${youtubeId}&playsinline=1&enablejsapi=1&showinfo=0&rel=0`}
+              title={title}
+              className={`absolute inset-0 w-full h-full z-0 pointer-events-none ${objectFit === 'contain' ? 'object-contain bg-black/90' : 'object-cover'}`}
+              allow="autoplay; encrypted-media"
+              frameBorder="0"
+              style={rotateStyle}
+            />
+          )
+        ) : src ? (
           <video
             ref={videoRef}
             src={src ? `${src}#t=${actualStartTime}` : undefined}
-            poster={thumbnail || undefined}
+            poster={cardThumbnail || undefined}
             muted={true}
             loop={true}
             playsInline={true}
@@ -226,9 +252,9 @@ export default function VideoCard({ title, category, type, src, thumbnail, previ
           <div className="absolute inset-0 bg-gradient-to-br from-card to-muted z-0" />
         )}
 
-        {thumbnail && (
+        {cardThumbnail && (
           <img
-            src={thumbnail}
+            src={cardThumbnail}
             alt={title}
             loading="lazy"
             className={`absolute inset-0 w-full h-full object-cover z-[1] transition-opacity duration-700 ${playing ? 'opacity-0' : 'opacity-100'}`}
@@ -274,13 +300,14 @@ export default function VideoCard({ title, category, type, src, thumbnail, previ
         </div>
       </div>
 
-      {src && (
+      {(src || youtubeId) && (
         <VideoFullscreenModal
           isOpen={isFullscreen}
           onClose={handleCloseFullscreen}
           src={src}
+          youtubeId={youtubeId}
           title={title}
-          poster={thumbnail}
+          poster={cardThumbnail}
           startTime={fullscreenStartTime}
           muted={noAudio ? true : muted}
           onMutedChange={noAudio ? () => {} : setMuted}

@@ -31,7 +31,9 @@ function fitVideoWidth(naturalWidth: number, naturalHeight: number): number {
 interface VideoFullscreenModalProps {
   isOpen: boolean;
   onClose: () => void;
-  src: string;
+  src?: string;
+  youtubeId?: string;
+  type?: '9:16' | '16:9' | '1:1';
   title: string;
   poster?: string;
   startTime?: number;
@@ -47,6 +49,8 @@ export default function VideoFullscreenModal({
   isOpen,
   onClose,
   src,
+  youtubeId,
+  type,
   title,
   poster,
   startTime = 0,
@@ -70,19 +74,37 @@ export default function VideoFullscreenModal({
   }, [onClose]);
 
   const syncDisplayWidth = useCallback(() => {
+    if (youtubeId) {
+      const isPortrait = type === '9:16';
+      const isSquare = type === '1:1';
+      const w = isPortrait ? 1080 : isSquare ? 1080 : 1920;
+      const h = isPortrait ? 1920 : isSquare ? 1080 : 1080;
+      setDisplayWidth(fitVideoWidth(w, h));
+      return;
+    }
     const video = videoRef.current;
     if (!video || video.videoWidth === 0 || video.videoHeight === 0) return;
     const isRotated = rotate === 'left' || rotate === 'right';
     const w = isRotated ? video.videoHeight : video.videoWidth;
     const h = isRotated ? video.videoWidth : video.videoHeight;
     setDisplayWidth(fitVideoWidth(w, h));
-  }, [rotate]);
+  }, [rotate, youtubeId, type]);
 
   useEffect(() => {
     if (!isOpen) {
       setDisplayWidth(null);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen && youtubeId) {
+      syncDisplayWidth();
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 600);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, youtubeId, syncDisplayWidth]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -342,23 +364,39 @@ export default function VideoFullscreenModal({
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <video
-              ref={videoRef}
-              src={src}
-              poster={poster}
-              playsInline={true}
-              muted={muted}
-              loop
-              tabIndex={0}
-              onClick={togglePlay}
-              onLoadedMetadata={handleLoadedMetadata}
-              onLoadedData={handleLoadedMetadata}
-              className="block w-full h-auto bg-black shadow-2xl outline-none focus-visible:ring-2 focus-visible:ring-primary/60 cursor-pointer"
-              aria-label={title}
-              style={rotateStyle}
-            />
+            {youtubeId ? (
+              <iframe
+                src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&controls=1&rel=0&modestbranding=1&playsinline=1`}
+                title={title}
+                className="block w-full bg-black shadow-2xl border-0"
+                allow="autoplay; encrypted-media; picture-in-picture"
+                allowFullScreen
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  aspectRatio: type === '9:16' ? '9/16' : '16/9',
+                  ...rotateStyle
+                }}
+              />
+            ) : (
+              <video
+                ref={videoRef}
+                src={src}
+                poster={poster}
+                playsInline={true}
+                muted={muted}
+                loop
+                tabIndex={0}
+                onClick={togglePlay}
+                onLoadedMetadata={handleLoadedMetadata}
+                onLoadedData={handleLoadedMetadata}
+                className="block w-full h-auto bg-black shadow-2xl outline-none focus-visible:ring-2 focus-visible:ring-primary/60 cursor-pointer"
+                aria-label={title}
+                style={rotateStyle}
+              />
+            )}
 
-            {!isPlaying && !isLoading && (
+            {!youtubeId && !isPlaying && !isLoading && (
               <div 
                 className="absolute inset-0 flex items-center justify-center bg-black/35 pointer-events-none z-10"
               >
@@ -370,7 +408,7 @@ export default function VideoFullscreenModal({
               </div>
             )}
 
-            {displayWidth && !noAudio && (
+            {displayWidth && !youtubeId && !noAudio && (
               <button
                 type="button"
                 onClick={toggleMute}
