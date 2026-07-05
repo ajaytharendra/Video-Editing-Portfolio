@@ -2,6 +2,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, Volume2, VolumeX } from 'lucide-react';
+import VideoLoader from './VideoLoader';
 
 const FOCUSABLE_SELECTOR =
   'button:not([disabled]), video[controls], [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -62,6 +63,7 @@ export default function VideoFullscreenModal({
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const [displayWidth, setDisplayWidth] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const close = useCallback(() => {
     onClose();
@@ -164,6 +166,7 @@ export default function VideoFullscreenModal({
     if (!isOpen || !videoRef.current) return;
 
     setIsPlaying(true);
+    setIsLoading(true);
     const video = videoRef.current;
     let startVal = 0;
     let endVal: number | null = null;
@@ -223,12 +226,25 @@ export default function VideoFullscreenModal({
 
     const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
+    const handleWaiting = () => setIsLoading(true);
+    const handlePlaying = () => {
+      setIsPlaying(true);
+      setIsLoading(false);
+    };
+    const handleCanPlay = () => setIsLoading(false);
+    const handleSeeking = () => setIsLoading(true);
+    const handleSeeked = () => setIsLoading(false);
 
     video.addEventListener('loadedmetadata', handleLoadedMetadata);
     video.addEventListener('timeupdate', handleTimeUpdate);
     video.addEventListener('volumechange', handleVolumeChange);
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
+    video.addEventListener('waiting', handleWaiting);
+    video.addEventListener('playing', handlePlaying);
+    video.addEventListener('canplay', handleCanPlay);
+    video.addEventListener('seeking', handleSeeking);
+    video.addEventListener('seeked', handleSeeked);
 
     if (video.readyState >= 1) {
       updateTimes();
@@ -240,6 +256,11 @@ export default function VideoFullscreenModal({
       video.removeEventListener('volumechange', handleVolumeChange);
       video.removeEventListener('play', handlePlay);
       video.removeEventListener('pause', handlePause);
+      video.removeEventListener('waiting', handleWaiting);
+      video.removeEventListener('playing', handlePlaying);
+      video.removeEventListener('canplay', handleCanPlay);
+      video.removeEventListener('seeking', handleSeeking);
+      video.removeEventListener('seeked', handleSeeked);
     };
   }, [isOpen, src, startTime, trimStartTime, trimEndTime, muted, noAudio]);
 
@@ -333,7 +354,11 @@ export default function VideoFullscreenModal({
               style={rotateStyle}
             />
 
-            {!isPlaying && (
+            {isLoading && (
+              <VideoLoader className="absolute inset-0 bg-black/60 z-30" />
+            )}
+
+            {!isPlaying && !isLoading && (
               <div 
                 className="absolute inset-0 flex items-center justify-center bg-black/35 pointer-events-none z-10"
               >

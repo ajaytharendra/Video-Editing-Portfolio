@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { Play, Volume2, VolumeX } from 'lucide-react';
 import VideoFullscreenModal from './VideoFullscreenModal';
+import VideoLoader from './VideoLoader';
 
 interface VideoCardProps {
   title: string;
@@ -42,12 +43,44 @@ export default function VideoCard({ title, category, type, src, thumbnail, previ
   const [fullscreenStartTime, setFullscreenStartTime] = useState(0);
   const [actualStartTime, setActualStartTime] = useState(0);
   const [actualEndTime, setActualEndTime] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.muted = noAudio ? true : muted;
     }
   }, [muted, noAudio]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !src) return;
+
+    const handleWaiting = () => setIsLoading(true);
+    const handlePlaying = () => setIsLoading(false);
+    const handleLoadStart = () => setIsLoading(true);
+    const handleCanPlay = () => setIsLoading(false);
+    const handleSeeking = () => setIsLoading(true);
+    const handleSeeked = () => setIsLoading(false);
+    const handlePause = () => setIsLoading(false);
+
+    video.addEventListener('waiting', handleWaiting);
+    video.addEventListener('playing', handlePlaying);
+    video.addEventListener('loadstart', handleLoadStart);
+    video.addEventListener('canplay', handleCanPlay);
+    video.addEventListener('seeking', handleSeeking);
+    video.addEventListener('seeked', handleSeeked);
+    video.addEventListener('pause', handlePause);
+
+    return () => {
+      video.removeEventListener('waiting', handleWaiting);
+      video.removeEventListener('playing', handlePlaying);
+      video.removeEventListener('loadstart', handleLoadStart);
+      video.removeEventListener('canplay', handleCanPlay);
+      video.removeEventListener('seeking', handleSeeking);
+      video.removeEventListener('seeked', handleSeeked);
+      video.removeEventListener('pause', handlePause);
+    };
+  }, [src]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -211,6 +244,10 @@ export default function VideoCard({ title, category, type, src, thumbnail, previ
               <Play className="w-6 h-6 text-background ml-1" fill="currentColor" />
             </div>
           </div>
+        )}
+
+        {playing && isLoading && src && (
+          <VideoLoader className="absolute inset-0 bg-black/60 z-30" />
         )}
 
         {playing && src && !isFullscreen && !noAudio && (

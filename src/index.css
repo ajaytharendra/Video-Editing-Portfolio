@@ -272,3 +272,8 @@ html.lenis, html.lenis body {
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
 }
+
+@keyframes playheadMove {
+  0% { left: 0%; }
+  100% { left: 100%; }
+}
